@@ -1,0 +1,27 @@
+{
+  "name": "com.pancake.dig",
+  "displayName": "Dig",
+  "description": "Provide Dig",
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "category": "unity",
+  "author": {
+    "name": "yenmoc",
+    "email": "phongsoyenmoc.diep@gmail.com",
+    "url": "https://github.com/yenmoc"
+  },
+  "license": "MIT",
+  "keywords": [
+    "unity"
+  ],
+  "dependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:pancake-llc/dig.git",
+    "directory": "Dig"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@pancake-llc"
+  }
+}
