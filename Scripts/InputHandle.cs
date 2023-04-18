@@ -37,14 +37,14 @@ public class InputHandle : MonoBehaviour
             {
                 currentTouchPoint = mainCamera.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, -cameraZPos));
                 // pool
-                RuntimeCircleClipper2 circleClipper2 = new RuntimeCircleClipper2(clipType,
+                CircleClipper circleClipper = new CircleClipper(clipType,
                     radius,
                     segmentCount,
                     touchMoveDistance,
                     previousTouchPoint,
                     currentTouchPoint,
                     touchPhase);
-                StartCoroutine(circleClipper2.Dig(currentTouchPoint));
+                StartCoroutine(circleClipper.IeDig(currentTouchPoint));
                 previousTouchPoint = currentTouchPoint;
             }
             else if (touch.phase == TouchPhase.Moved)
@@ -54,14 +54,14 @@ public class InputHandle : MonoBehaviour
                 if ((currentTouchPoint - previousTouchPoint).sqrMagnitude <= touchMoveDistance * touchMoveDistance)
                     return;
                
-                RuntimeCircleClipper2 circleClipper2 = new RuntimeCircleClipper2(clipType,
+                CircleClipper circleClipper = new CircleClipper(clipType,
                     radius,
                     segmentCount,
                     touchMoveDistance,
                     previousTouchPoint,
                     currentTouchPoint,
                     touchPhase);
-                StartCoroutine(circleClipper2.Dig2(previousTouchPoint, currentTouchPoint));
+                StartCoroutine(circleClipper.IeMoveDig(previousTouchPoint, currentTouchPoint));
 
                 previousTouchPoint = currentTouchPoint;
             }
