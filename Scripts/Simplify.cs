@@ -5,7 +5,7 @@ using Vector2f = UnityEngine.Vector2;
 
 public static class BlockSimplification
 {
-    public static int64 epsilon = (int64)(0.0f * VectorEx.float2int64);
+    public static int64 epsilon = (int64) (0.0f * VectorEx.float2int64);
 
     public static Vector2i currentLowerPoint;
 
@@ -35,8 +35,8 @@ public static class BlockSimplification
         //return p.x != currentLowerPoint.x && p.x != currentUpperPoint.x
         //    && p.y != currentLowerPoint.y && p.y != currentUpperPoint.y;
 
-        return p.x - currentLowerPoint.x - epsilon > 0 && p.y - currentLowerPoint.y - epsilon > 0
-            && currentUpperPoint.x - p.x - epsilon > 0 && currentUpperPoint.y - p.y - epsilon > 0;
+        return p.x - currentLowerPoint.x - epsilon > 0 && p.y - currentLowerPoint.y - epsilon > 0 && currentUpperPoint.x - p.x - epsilon > 0 &&
+               currentUpperPoint.y - p.y - epsilon > 0;
     }
 
     public static void RamerDouglasPeucker(List<Vector2i> inPolygon, int[] mask, int a, int b, ref int removeCount)
@@ -63,12 +63,19 @@ public static class BlockSimplification
 
         if (dmax > epsilon)
         {
-            RamerDouglasPeucker(inPolygon, mask, a, index, ref removeCount);
-            RamerDouglasPeucker(inPolygon, mask, index, b, ref removeCount);
+            RamerDouglasPeucker(inPolygon,
+                mask,
+                a,
+                index,
+                ref removeCount);
+            RamerDouglasPeucker(inPolygon,
+                mask,
+                index,
+                b,
+                ref removeCount);
         }
         else
         {
-
             //int maskA = GetMask(inPolygon[a]);
             //int maskB = GetMask(inPolygon[b]);
 
@@ -93,16 +100,20 @@ public static class BlockSimplification
         int inVertexCount = inPolygon.Count;
 
         if (inVertexCount < 2)
-		    return null;
+            return null;
 
         int[] polygonMask = new int[inVertexCount];
 
         int removeCount = 0;
         if (epsilon > 0f)
         {
-            RamerDouglasPeucker(inPolygon, polygonMask, 0, inVertexCount - 1, ref removeCount);
+            RamerDouglasPeucker(inPolygon,
+                polygonMask,
+                0,
+                inVertexCount - 1,
+                ref removeCount);
         }
-        
+
         Vector2i[] outPolygon = new Vector2i[inVertexCount - removeCount];
 
         List<Vector2f> outEdge = new List<Vector2f>();
@@ -111,14 +122,14 @@ public static class BlockSimplification
 
         int j = 0;
         for (int i = 0; i < inVertexCount; i++)
-	    {
+        {
             if (polygonMask[i] != 1)
-            {               
-			    outPolygon[j] = inPolygon[i];	    
-			    edgeMask[j] = GetMask(inPolygon[i]);
-			    j++;
-		    }
-	    }
+            {
+                outPolygon[j] = inPolygon[i];
+                edgeMask[j] = GetMask(inPolygon[i]);
+                j++;
+            }
+        }
 
         int maskPrev, mask, a;
         for (int i = 0; i < edgeMask.Length; i++)
@@ -150,7 +161,7 @@ public static class BlockSimplification
         maskPrev = edgeMask[edgeMask.Length - 1];
         mask = edgeMask[0];
         a = mask & maskPrev;
-   
+
         if (mask != 0 && a != 0)
         {
             if (outEdge.Count > 1)
