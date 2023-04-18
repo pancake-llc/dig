@@ -12,16 +12,16 @@ public class InputHandle : MonoBehaviour
 
     public float touchMoveDistance = 0.1f;
 
-    private Camera mainCamera;
-    private float cameraZPos;
-    private TouchPhase touchPhase;
-    private Vector2f currentTouchPoint;
-    private Vector2f previousTouchPoint;
+    private Camera _mainCamera;
+    private float _cameraZPos;
+    private TouchPhase _touchPhase;
+    private Vector2f _currentTouchPoint;
+    private Vector2f _previousTouchPoint;
 
     private void Awake()
     {
-        mainCamera = Camera.main;
-        cameraZPos = mainCamera.transform.position.z;
+        _mainCamera = Camera.main;
+        _cameraZPos = _mainCamera.transform.position.z;
     }
 
     private void Update()
@@ -31,39 +31,40 @@ public class InputHandle : MonoBehaviour
             Touch touch = TouchUtility.GetTouch(0);
             Vector2 touchPosition = touch.position;
 
-            touchPhase = touch.phase;
+            _touchPhase = touch.phase;
 
             if (touch.phase == TouchPhase.Began)
             {
-                currentTouchPoint = mainCamera.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, -cameraZPos));
-                // pool
-                CircleClipper circleClipper = new CircleClipper(clipType,
+                _currentTouchPoint = _mainCamera.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, -_cameraZPos));
+                // todo: optimize by using pool to cached object
+                var circleClipper = new CircleClipper(clipType,
                     radius,
                     segmentCount,
                     touchMoveDistance,
-                    previousTouchPoint,
-                    currentTouchPoint,
-                    touchPhase);
-                StartCoroutine(circleClipper.IeDig(currentTouchPoint));
-                previousTouchPoint = currentTouchPoint;
+                    _previousTouchPoint,
+                    _currentTouchPoint,
+                    _touchPhase);
+                StartCoroutine(circleClipper.IeDig(_currentTouchPoint));
+                _previousTouchPoint = _currentTouchPoint;
             }
             else if (touch.phase == TouchPhase.Moved)
             {
-                currentTouchPoint = mainCamera.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, -cameraZPos));
- 
-                if ((currentTouchPoint - previousTouchPoint).sqrMagnitude <= touchMoveDistance * touchMoveDistance)
+                _currentTouchPoint = _mainCamera.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, -_cameraZPos));
+
+                if ((_currentTouchPoint - _previousTouchPoint).sqrMagnitude <= touchMoveDistance * touchMoveDistance)
                     return;
-               
-                CircleClipper circleClipper = new CircleClipper(clipType,
+
+                // todo: optimize by using pool to cached object
+                var circleClipper = new CircleClipper(clipType,
                     radius,
                     segmentCount,
                     touchMoveDistance,
-                    previousTouchPoint,
-                    currentTouchPoint,
-                    touchPhase);
-                StartCoroutine(circleClipper.IeMoveDig(previousTouchPoint, currentTouchPoint));
+                    _previousTouchPoint,
+                    _currentTouchPoint,
+                    _touchPhase);
+                StartCoroutine(circleClipper.IeMoveDig(_previousTouchPoint, _currentTouchPoint));
 
-                previousTouchPoint = currentTouchPoint;
+                _previousTouchPoint = _currentTouchPoint;
             }
         }
     }
